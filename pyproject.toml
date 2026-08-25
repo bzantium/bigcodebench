@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bigcodebench"
+version = "0.2.5"
+description = "Evaluation modules extracted from bigcode-project/bigcodebench (Apache-2.0)"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+  { name = "BigCodeBench contributors" },
+]
+dependencies = [
+  "appdirs>=1.4.4",
+  "datasets",
+  "multipledispatch>=0.6.0",
+  "numpy",
+  "pqdm>=0.2.0",
+  "rich",
+  "tempdir>=0.7.1",
+  "termcolor>=2.0.0",
+  "tqdm>=4.56.0",
+  "wget>=3.2",
+]
+
+# What the tasks themselves import. Unpinned: upstream's pins resolve only on
+# Python 3.10 and hold numpy below 2, which conflicts with harnesses that need it.
+[project.optional-dependencies]
+eval = [
+  "beautifulsoup4", "blake3", "chardet", "cryptography", "Django", "dnspython",
+  "docxtpl", "Faker", "flask", "Flask-Mail", "flask_login", "flask_restful",
+  "flask_wtf", "folium", "gensim", "geopandas", "geopy", "holidays", "keras",
+  "Levenshtein", "librosa", "lxml", "matplotlib", "mechanize", "natsort",
+  "networkx", "nltk", "numba", "opencv-python-headless", "openpyxl", "pandas",
+  "Pillow", "prettytable", "psutil", "pycryptodome", "pyfakefs", "pyquery",
+  "pytesseract", "pytest", "python-dateutil", "python-docx",
+  "python_http_client", "pytz", "PyYAML", "requests", "requests_mock", "rsa",
+  "scikit-image", "scikit-learn", "scipy", "seaborn", "selenium", "sendgrid",
+  "shapely", "soundfile", "statsmodels", "sympy", "tensorflow", "textblob",
+  "texttable", "Werkzeug", "wikipedia", "wordcloud", "wordninja", "WTForms",
+  "xlrd", "xlwt", "xmltodict",
+]
+
+[project.urls]
+upstream = "https://github.com/bigcode-project/bigcodebench"
+
+[tool.setuptools.packages.find]
+include = ["bigcodebench*"]
