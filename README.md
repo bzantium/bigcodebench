@@ -42,7 +42,11 @@ current stack 67 of the 1140 fail, meaning a correct model answer scores zero.
 Against the ported data the groundtruth pass rate is 1.000.
 
 Set `BIGCODEBENCH_OVERRIDE_PATH` to a jsonl to grade against your own problems
-instead.
+instead, or point `BIGCODEBENCH_HF` at another dataset. Downloaded problems are
+cached under a filename carrying the dataset owner, so switching datasets does
+not silently reuse the previous one — upstream keyed the cache on the version
+string alone, which meant a fork sharing `v0.1.4` was graded against whatever
+had been downloaded first.
 
 ## Install
 
@@ -75,12 +79,28 @@ Results are written next to the samples file as `*_eval_results.json` and
 
 To check the reference solutions without a model, pass `check_gt_only=True`.
 
-## Notes
+## Environment
+
+| Variable | Effect |
+|---|---|
+| `BIGCODEBENCH_OVERRIDE_PATH` | Grade against a local jsonl instead of the dataset |
+| `BIGCODEBENCH_TIMEOUT_PER_TASK` | Per-task wall-clock ceiling in seconds (default 240) |
+| `MALLOC_ARENA_MAX` | Cap glibc's per-thread arenas (see below) |
+
+The slowest reference solution takes ~235s, so the default ceiling leaves little
+room once workers contend; raise it if tasks time out. Doing so does not loosen
+grading — a solution's own limit is derived from how long the reference took.
+Upstream read this variable as a string and only applied it to the outer process
+join, so it had no effect on the limit the tests ran under.
 
 Generated code runs under `RLIMIT_AS`/`RLIMIT_DATA` (30 GiB by default). On a
 many-core host, glibc's per-thread malloc arenas can exhaust that before a test
 runs; export `MALLOC_ARENA_MAX=2` if you hit it. It must be set before the
 process starts — glibc reads it at startup.
+
+Tasks that import `turtle` need `tkinter`, which is not part of a pip install.
+Use your OS package (`apt install python3.X-tk`), or `pip install tkinter-bundle`
+where that is unavailable.
 
 ## License
 
