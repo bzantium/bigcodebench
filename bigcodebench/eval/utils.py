@@ -32,7 +32,10 @@ import multiprocessing
 import time
 from typing import Optional
 
-TIMEOUT_LIMIT=240.0
+# Per-task wall-clock ceiling. Reading it here rather than at the call sites
+# makes BIGCODEBENCH_TIMEOUT_PER_TASK reach the limit the tests actually run
+# under; upstream applied it only to the outer process join.
+TIMEOUT_LIMIT = float(os.getenv("BIGCODEBENCH_TIMEOUT_PER_TASK", 240.0))
 
 @contextlib.contextmanager
 def swallow_subprocess_output():
