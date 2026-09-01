@@ -179,7 +179,9 @@ def untrusted_check(
     gt_time_limit: float = 60
 ) -> Tuple[str, np.ndarray]:
     min_time_limit = max(min_time_limit, gt_time_limit)
-    timeout = max(os.getenv("BIGCODEBENCH_TIMEOUT_PER_TASK", TIMEOUT_LIMIT), min_time_limit) + 1
+    # TIMEOUT_LIMIT already reads BIGCODEBENCH_TIMEOUT_PER_TASK as a float; reading the
+    # env var again here compared a str against a float once the knob was set.
+    timeout = max(TIMEOUT_LIMIT, min_time_limit) + 1
     # shared memory objects
     stat = Value("i", _UNKNOWN)
     manager = Manager()
